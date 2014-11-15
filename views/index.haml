@@ -1,0 +1,25 @@
+.container
+  .row
+    .col-md-6.col-md-offset-3
+      %h1= @title
+
+      - if @error
+        .alert.alert-dismissable.alert-danger{ role: 'alert' }
+          = @error
+
+      %form{ action: '/', method: 'GET', role: 'form', class: 'form-horizontal' }
+        %label{ for: 'id' }
+          %a{ href: 'http://themoviedb.org/' } TMDb
+          List ID
+
+        .input-group
+          %input.required.form-control{ type: 'text', name: 'id', id: 'id' }
+          %span.input-group-btn
+            %button.btn.btn-primary{ type: 'submit' } View
+
+        .help-block
+          %p
+            The List ID is the last part of a URL like
+            %br
+            http://www.themoviedb.org/list/50a510fb760ee34f2c001574
+          %p It may take a moment to load a list for the first time.

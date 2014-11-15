@@ -1,0 +1,1 @@
+TMDB_KEY = ENV['TMDB_KEY']
