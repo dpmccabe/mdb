@@ -1,6 +1,6 @@
 $(document).ready(function() {
   var match_cell_widths = function() {
-    var td_widths = $('table#mdb-table tbody tr:first td').map(function() {
+    var td_widths = $('table#mdb-table tbody tr:visible:first td').map(function() {
       return $(this).css('width')
     }).get()
 
