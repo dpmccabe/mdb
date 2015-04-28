@@ -21,6 +21,24 @@ class Movie
   field :genres, type: Array
   field :directors, type: Array
   field :actors, type: Array
+
+  def display_title
+    title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1')
+  end
+
+  def truncated_title
+    if display_title.length <= 40
+      display_title
+    else
+      trunc_it = display_title
+
+      loop do
+        break if trunc_it.gsub!(/\s+\w+\z/, '').length <= 38
+      end
+
+      "#{trunc_it}&hellip;"
+    end
+  end
 end
 
 def tmdb_get(path)
@@ -75,7 +93,7 @@ get '/' do
       Movie.create!(movies_to_save_attributes)
     end
 
-    @movies = Movie.where(:_id.in => list_movie_ids).sort(title: 1)
+    @movies = Movie.where(:_id.in => list_movie_ids).sort(title: 1).limit(30)
     @genres = @movies.map{ |movie| movie.genres }.flatten.uniq.sort
 
     haml :list, format: :html5, layout: :layout

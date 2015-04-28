@@ -1,125 +1,15 @@
 body {
   font-size: 12px;
   min-width: 970px;
+  font-family: 'Lucida Grande', sans-serif;
 }
 
 h1 {
   margin-bottom: 20px;
 }
 
-table#mdb-table {
-  background: white;
-  width: 100%;
-}
-
-thead {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 2;
-}
-
-@media (max-width: 1023px) {
-  table#mdb-table {
-    margin: 0 !important;
-  }
-
-  thead {
-    position: static;
-  }
-}
-
-th {
-  background: #ccc;
-  height: 40px;
-  border: none !important;
-  vertical-align: middle !important;
-}
-
-th.sortable:hover {
-  cursor: pointer;
-  background: #bbb;
-}
-
-th.sortable label:hover {
-  cursor: pointer;
-}
-
-th:focus, th:active {
-  color: #666;
-  outline: none;
-}
-
-th.list-info {
-  vertical-align: top !important;
-  background: #333;
-  height: auto;
-}
-
-th.list-info h4 {
-  margin: 5px 0;
-  color: white;
-}
-
-th.list-info p {
-  margin: 5px 0;
-  font-weight: normal;
-  color: #ccc;
-}
-
-th.list-info a {
-  color: #afd9ee;
-}
-
-th.list-info a:hover {
-  color: #85c5e5;
-}
-
-th.list-info#back a.btn {
-  background-color: #505050;
-  color: #aaa;
-}
-
-th.list-info#back a.btn:hover {
-  background-color: #555;
-}
-
-#mdb-table form {
-  display: inline;
-}
-
-#mdb-table label {
-  margin-right: 5px;
-  margin-bottom: 0;
-}
-
-#mdb-table input {
-  font-weight: normal;
-  width: 130px !important;
-}
-
-#mdb-table select {
-  font-weight: normal;
-}
-
-#mdb-table .input-group-addon {
-  padding: 6px;
-}
-
-#mdb-table tr td:first-child, #mdb-table tr th:first-child {
-  padding-left: 10px;
-}
-
-#mdb-table tr td:last-child, #mdb-table tr th:last-child {
-  padding-right: 10px;
-}
-
 h6 {
   margin: 10px 0 0 0;
-}
-
-h4 {
-  margin: 0;
 }
 
 p {
@@ -130,75 +20,108 @@ h6 + p {
   margin-top: 5px;
 }
 
-#mdb-table select.form-control + .input-group-addon {
-  background: none;
-  border-color: transparent;
+ul#movies {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-a#clear_genre {
-  font-size: 14px;
-}
-
-.cover {
-  height: 19px;
-  width: 92px;
-  overflow: hidden;
+li.movie {
+  height: 69px;
+  width: 275px;
+  margin: 4px;
+  padding: 5px;
+  background: #f3f3f3;
+  box-shadow: #ddd 0 2px 4px;
+  box-sizing: content-box;
+  cursor: pointer;
   position: relative;
 }
 
-.cover img {
-  position: absolute;
-  left: 0;
-  top: 0;
-  clip: rect(0, 92px, 19px, 0);
-  -webkit-filter: blur(10px);
-  -moz-filter: blur(10px);
-  -o-filter: blur(10px);
-  -ms-filter: blur(10px);
-  filter: blur(10px);
+.movie img {
+  float: left;
+  height: 69px;
+  width: auto;
+  opacity: 0.7;
+}
+
+.title {
+  margin-left: 54px;
+  height: 100%;
+  position: relative;
+}
+
+.title h4 {
+  margin: 5px 0 0 0;
+}
+
+.title p {
+  margin: 5px 0 0 0;
+  color: #777;
+}
+
+li.movie:hover {
+  background: #eee;
+}
+
+li.movie:hover img, li.movie.expanded img {
+  opacity: 1;
+}
+
+li.movie:active, li.movie:focus, li.movie.expanded {
+  box-shadow: #ddd 0 2px 4px inset;
+}
+
+li.movie.expanded {
+  height: auto;
+  background: #e0eeff;
 }
 
 .detail {
   display: none;
-  max-width: 50em;
+  z-index: 100;
+  position: absolute;
+  width: 285px;
+  height: 255px;
+  left: 293px;
+  top: 0;
+  background: #e0eeff;
+  box-shadow: white 0 2px 4px, #ddd 0 2px 4px inset;
 }
 
 .expanded .detail {
   display: block;
 }
 
-tbody {
-  z-index: 1;
+.connector {
+  position: absolute;
+  background: #e0eeff;
+  height: 79px;
+  width: 10px;
+  left: -10px;
+  box-shadow: #ddd 0 2px 4px inset;
 }
 
-tbody tr:first-child td {
-  border-top: none !important;
+.connector-inner {
+  position: absolute;
+  height: 75px;
+  top: 4px;
+  width: 14px;
+  left: -2px;
+  background: #e0eeff;
 }
 
-tbody tr:hover td {
-  cursor: pointer;
+.detail-text {
+  padding: 15px;
 }
 
-tbody tr:not(.expanded):hover td {
-  background: #eee !important;
-}
-
-tbody tr.expanded td {
-  background: #d9edf7 !important;
-  border-color: #428bca;
-  border-width: 1px !important;
-  color: black;
-}
-
-.expanded .cover {
-  height: 138px;
-}
-
-.expanded .cover img {
-  -webkit-filter: none;
-  -moz-filter: none;
-  -o-filter: none;
-  -ms-filter: none;
-  filter: none;
-  clip: rect(0, 92px, 138px, 0);
+.detail-text p {
+  margin: 0;
 }

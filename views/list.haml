@@ -1,84 +1,15 @@
-%table.table.table-striped.table-condensed#mdb-table
-  %thead
-    %tr
-      %th.list-info#back
-        %p
-          %a.btn.btn-sm{ href: '/' } Back
+%ul#movies
+  - @movies.each do |movie|
+    %li.movie{ data: { title: movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1').downcase, director: movie.directors.join(', ').downcase, genre: movie.genres.join(', ').downcase }, id: "movie_#{movie.id}" }
+      %img{ src: "#{@poster_path_base_url}w92#{movie.poster_path}" }
 
-      %th.list-info{ colspan: 1 }
-        %h4= @list['name']
-        %p.small
-          %a{ href: "https://www.themoviedb.org/list/#{@list_id}" } View on TMDb
+      .title
+        %h4= movie.truncated_title
+        %p= movie.genres.first(3).join(', ')
 
-      %th.list-info{ colspan: 4 }
-        %p= @list['description']
+      .detail
+        .connector
+          .connector-inner
 
-    %tr
-      %th
-
-      %th.sortable#title
-        %form.form-inline
-          .form-group
-            %label.control-label Title
-            .input-group
-              %input#search_title.form-control.input-sm{ type: 'text', placeholder: 'Search' }
-              .input-group-addon
-                %a#clear_title{ href: '#' }
-                  %span.glyphicon.glyphicon-remove
-
-      %th.sortable#director
-        %form.form-inline
-          .form-group
-            %label.control-label Director
-            .input-group
-              %input#search_director.form-control.input-sm{ type: 'text', placeholder: 'Search' }
-              .input-group-addon
-                %a#clear_director{ href: '#' }
-                  %span.glyphicon.glyphicon-remove
-
-      %th#genres
-        %form.form-inline
-          .form-group
-            %label.control-label Genres
-            .input-group
-              %select#search_genre.form-control.input-sm
-                %option{ value: '' }
-                = @genres.map { |genre| "<option value'#{genre}'>#{genre}</option>" }
-              .input-group-addon
-                %a#clear_genre{ href: '#' }
-                  %span.glyphicon.glyphicon-remove
-
-      %th.sortable Year
-
-      %th.sortable Runtime
-
-  %tbody
-    - @movies.each do |movie|
-      %tr{ data: { title: movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1').downcase, director: movie.directors.join(', ').downcase, genre: movie.genres.join(', ').downcase }, id: "movie_#{movie.id}" }
-        %td{ style: 'width: 102px; text-align: center;' }
-          .cover
-            %img{ src: "#{@poster_path_base_url}/w92/#{movie.poster_path}" }
-
-        %td{ style: 'width: auto; min-width: 250px' }
-          %h4{ style: 'margin-top: 0' }= movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1')
-          .detail
-            %h6= movie.tagline
-            %p= movie.overview
-            %h6 Cast
-            %p= movie.actors.join(', ').html_safe
-            %p
-              %a{ href: "https://www.themoviedb.org/movie/#{movie._id}" } TMDB
-              \/
-              %a{ href: "http://www.imdb.com/title/#{movie.imdb_id}" } IMDb
-              \/
-              %a{ href: "http://en.wikipedia.org/w/index.php?search=#{movie.title} (film)" } Wikipedia
-
-        %td{ style: 'width: 250px' }= movie.directors.take(2).join(', ')
-
-        %td.genre{ style: 'width: 300px' }= movie.genres.join(', ')
-
-        %td{ style: 'width: 60px' }= movie.release_date.strftime('%Y')
-
-        %td{ style: 'width: 70px' }
-          - if movie.runtime
-            #{movie.runtime / 60}h #{movie.runtime % 60}m
+        .detail-text
+          %p= movie.overview
