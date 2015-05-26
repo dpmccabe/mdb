@@ -12,14 +12,9 @@
 
     %link{ href: '/favicon.ico?2', rel: 'shortcut icon', type: 'image/vnd.microsoft.icon'}
 
-    /[if lt IE 9]
-      <script src='//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js'></script>
-      <script src='//oss.maxcdn.com/respond/1.4.2/respond.min.js'></script>
-
   %body
     = yield
 
     %script{ src: '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' }
     %script{ src: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js' }
-    %script{ src: '/color-thief.js' }
     %script{ src: '/mdb.js' }

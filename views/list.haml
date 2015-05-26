@@ -1,15 +1,86 @@
-%ul#movies
-  - @movies.each do |movie|
-    %li.movie{ data: { title: movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1').downcase, director: movie.directors.join(', ').downcase, genre: movie.genres.join(', ').downcase }, id: "movie_#{movie.id}" }
-      %img{ src: "#{@poster_path_base_url}w92#{movie.poster_path}" }
+#movies_container
+  %ul#movies
+    - @movies.each do |movie|
+      %li.movie.shown{ data: { id: movie.id, title: movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1'), director: movie.directors.join(', '), genre: (movie.genres - @excluded_genres).join(', '), actor: movie.actors.take(10).join(', ').html_safe, year: movie.release_date.strftime('%Y'), overview: movie.overview, runtime: movie.runtime, selected: 'no' }, id: "movie_#{movie.id}" }
+        %img{ src: "#{@poster_path_base_url}w154#{movie.poster_path}" }
 
-      .title
-        %h4= movie.truncated_title
-        %p= movie.genres.first(3).join(', ')
+#sidebar
+  %form{ action: '#', id: 'search', method: 'POST' }
+    .form-group
+      %label{ for: 'search_title' } Title
+      .input-group
+        %input.form-control#search_title{ type: 'text' }
+        .input-group-addon
+          %a#clear_title{ href: '#' }
+            %span.glyphicon.glyphicon-remove
 
-      .detail
-        .connector
-          .connector-inner
+    .form-group
+      %label{ for: 'search_year' } Year
+      .input-group
+        %input.form-control#search_year{ type: 'text' }
+        .input-group-addon
+          %a#clear_year{ href: '#' }
+            %span.glyphicon.glyphicon-remove
 
-        .detail-text
-          %p= movie.overview
+    .form-group
+      %label{ for: 'search_year' } Overview
+      .input-group
+        %input.form-control#search_overview{ type: 'text' }
+        .input-group-addon
+          %a#clear_overview{ href: '#' }
+            %span.glyphicon.glyphicon-remove
+
+    .form-group
+      %label{ for: 'search_director' } Director
+      .input-group
+        %input.form-control#search_director{ type: 'text' }
+        .input-group-addon
+          %a#clear_director{ href: '#' }
+            %span.glyphicon.glyphicon-remove
+
+    .form-group
+      %label{ for: 'search_actor' } Actor
+      .input-group
+        %input.form-control#search_actor{ type: 'text' }
+        .input-group-addon
+          %a#clear_actor{ href: '#' }
+            %span.glyphicon.glyphicon-remove
+
+    .form-group
+      %label{ for: 'search_genre' } Genre
+      .input-group
+        %select#search_genre.form-control.input-sm
+          %option{ value: '' }
+          = @genres.map { |genre| "<option value='#{genre}'>#{genre}</option>" }
+        .input-group-addon
+          %a#clear_genre{ href: '#' }
+            %span.glyphicon.glyphicon-remove
+
+    .form-group
+      %label Selected?
+      %input.form-control#search_selected{ type: 'hidden' }
+      .btn-group.btn-group-justified{ role: 'group' }
+        %a.selected-filter.btn.btn-default.active{ href: '#', role: 'button', data: { selected: '' } } All
+        %a.selected-filter.btn.btn-default{ href: '#', role: 'button', data: { selected: 'yes' } } Yes
+        %a.selected-filter.btn.btn-default{ href: '#', role: 'button', data: { selected: 'no' } } No
+
+  #details.hidden
+    %hr
+
+    %h4#title
+    %h6#year
+    %p#overview
+
+    %h6 Director
+    %p#director
+
+    %h6 Cast
+    %p#actor
+
+    %h6 Genre
+    %p#genre
+
+    %h6 Runtime
+    %p
+      %span#runtime
+      minutes

@@ -1,11 +1,20 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'sinatra'
 require 'haml'
 require 'json'
 require 'rest_client'
 require 'mongoid'
+require 'better_errors'
+require 'sinatra/reloader' if development?
 require_relative 'secrets'
 
 Mongoid.load!('mongoid.yml')
+
+configure :development do
+  use BetterErrors::Middleware
+  BetterErrors.application_root = File.expand_path('..', __FILE__)
+end
 
 class Movie
   include Mongoid::Document
@@ -21,24 +30,6 @@ class Movie
   field :genres, type: Array
   field :directors, type: Array
   field :actors, type: Array
-
-  def display_title
-    title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1')
-  end
-
-  def truncated_title
-    if display_title.length <= 40
-      display_title
-    else
-      trunc_it = display_title
-
-      loop do
-        break if trunc_it.gsub!(/\s+\w+\z/, '').length <= 38
-      end
-
-      "#{trunc_it}&hellip;"
-    end
-  end
 end
 
 def tmdb_get(path)
@@ -68,14 +59,13 @@ get '/' do
     movie_ids_to_save = list_movie_ids - saved_movie_ids
 
     if movie_ids_to_save.any?
-      movies_to_save_attributes = movie_ids_to_save.map do |movie_id|
+      movies_to_save_attributes = movie_ids_to_save.first(10).map do |movie_id|
         tmdb_movie = tmdb_get("movie/#{movie_id}")
         credits = tmdb_get("movie/#{movie_id}/credits")
         actors = credits['cast']
         directors = credits['crew'].select { |p| p['department'] == 'Directing' }
 
-        {
-          _id: tmdb_movie['id'],
+        { _id: tmdb_movie['id'],
           title: tmdb_movie['title'].gsub(/\A(The|A|An) (.*)\z/, '\2, \1'),
           search_title: tmdb_movie['title'].downcase,
           tagline: tmdb_movie['tagline'],
@@ -93,8 +83,11 @@ get '/' do
       Movie.create!(movies_to_save_attributes)
     end
 
-    @movies = Movie.where(:_id.in => list_movie_ids).sort(title: 1).limit(30)
+    @movies = Movie.where(:_id.in => list_movie_ids).limit(10).sort(title: 1)
+
     @genres = @movies.map{ |movie| movie.genres }.flatten.uniq.sort
+    @excluded_genres = ['Disaster', 'Sports Film', 'Film Noir', 'Indie', 'Suspense']
+    @genres -= @excluded_genres
 
     haml :list, format: :html5, layout: :layout
   else

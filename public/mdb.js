@@ -1,57 +1,110 @@
-$(document).ready(function() {
-  // var match_cell_widths = function() {
-  //   var td_widths = $('table#mdb-table tbody tr:visible:first td').map(function() {
-  //     return $(this).css('width')
-  //   }).get()
+function escapeRegExp(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
 
-  //   $('table#mdb-table thead th:not(.list-info)').each(function(i, th) {
-  //     $(th).css('width', td_widths[i])
-  //   })
-  // }
+adjust_spacing = function() {
+  line_width = document.body.clientWidth - 300
+  per_line = 0
+  needed_width = 0
 
-  // var match_thead_height = function() {
-  //   thead_height = $('table#mdb-table thead').height()
-  //   $('table#mdb-table').css('margin-top', thead_height  + 'px').css('margin-bottom', -thead_height  + 'px')
-  // }
+  do {
+    per_line++
+    needed_width = 10 + per_line * 164
+  } while (needed_width < line_width)
 
-  // match_cell_widths()
-  // match_thead_height()
+  per_line--
+  space_left = line_width - (per_line * 154)
+  margin = space_left / (per_line + 1) - 0.1
 
-  // $(window).resize(function() {
-  //   match_cell_widths()
-  //   match_thead_height()
-  // })
+  // console.log([line_width, per_line, space_left, margin])
 
-  // $.each(['title', 'director', 'genre'], function(i, field) {
-  //   $('#search_' + field).on('keyup change', function() {
-  //     var search_text = $(this).val().toLowerCase()
-  //     var tr_to_hide = $('table#mdb-table tbody tr').map(function(i, tr) {
-  //       if ($(tr).data(field).indexOf(search_text) >= 0)
-  //         return(null)
-  //       else
-  //         return('#' + $(tr).attr('id'))
-  //     }).get().join(', ')
-  //     $('table#mdb-table tbody tr').show()
-  //     $(tr_to_hide).hide()
-  //     match_cell_widths()
-  //     match_thead_height()
-  //   })
+  $('ul#movies li').css('margin-right', margin + 'px')
+  $('ul#movies li').css('margin-bottom', margin + 'px')
+  $('ul#movies').css('margin-top', margin + 'px')
+  $('ul#movies').css('margin-left', margin + 'px')
+}
 
-  //   $('a#clear_' + field).click(function(e) {
-  //     $('#search_' + field).val('')
-  //     $('table#mdb-table tbody tr').show()
-  //     match_cell_widths()
-  //     match_thead_height()
-  //     e.preventDefault()
-  //   })
-  // })
+$(window).resize(function() {
+  adjust_spacing()
+})
 
-  // $('table#mdb-table tbody tr').click(function() {
-  //   $(this).toggleClass('expanded')
-  // })
+//// List
+$('ul#movies li').click(function() {
+  $(this).toggleClass('selected')
 
-  $('li.movie').click(function() {
-    $('li.movie.expanded').removeClass('expanded')
-    $(this).addClass('expanded')
+  if ($(this).data('selected') == 'yes') {
+    $(this).data('selected', 'no')
+  }
+  else {
+    $(this).data('selected', 'yes')
+  }
+})
+
+$('ul#movies li').hover(function() {
+  el = $(this)
+
+  $.each(['title', 'year', 'overview', 'director', 'actor', 'genre', 'runtime'], function(i, field) {
+    $('#' + field).html(el.data(field))
   })
+  $('#details').removeClass('hidden')
+}, function() {
+  $('#details').addClass('hidden')
+})
+
+//// Search
+fields = ['title', 'year', 'overview', 'director', 'actor', 'genre', 'selected']
+
+$('form').submit(function() {
+  return(false)
+})
+
+filter_movies = function() {
+  $('li.movie').addClass('shown')
+
+  $.each(fields, function(i, field) {
+    search_text = $('#search_' + field).val()
+
+    if (search_text.length > 0) {
+      var search_regex = new RegExp("\\b" + escapeRegExp(search_text), 'i')
+
+      $.each($('li.movie.shown'), function(j, movie) {
+        if (!$(movie).data(field).toString().match(search_regex))
+          $(movie).removeClass('shown')
+      })
+    }
+
+    $('li.movie:not(.shown)').hide()
+    $('li.movie.shown').show()
+  })
+}
+
+$.each(fields, function(i, field) {
+  $('#search_' + field).on('keyup change', function() {
+    filter_movies()
+  })
+
+  $('a#clear_' + field).click(function(e) {
+    e.preventDefault()
+    $('#search_' + field).val('').trigger('change')
+  })
+})
+
+$('a.selected-filter').click(function(e) {
+  e.preventDefault()
+
+  $('input#search_selected').val($(this).data('selected')).trigger('change')
+
+  $('a.selected-filter').removeClass('active')
+  $(this).addClass('active')
+
+  if ($(this).data('selected') == 'yes') {
+    $('ul#movies').addClass('ignore-selected')
+  } else {
+    $('ul#movies').removeClass('ignore-selected')
+  }
+})
+
+//// Ready
+$(document).ready(function() {
+  adjust_spacing()
 })
