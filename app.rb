@@ -83,7 +83,7 @@ get '/' do
       Movie.create!(movies_to_save_attributes)
     end
 
-    @movies = Movie.where(:_id.in => list_movie_ids).limit(10).sort(title: 1)
+    @movies = Movie.where(:_id.in => list_movie_ids).limit(1000).sort(title: 1)
 
     @genres = @movies.map{ |movie| movie.genres }.flatten.uniq.sort
     @excluded_genres = ['Disaster', 'Sports Film', 'Film Noir', 'Indie', 'Suspense']

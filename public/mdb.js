@@ -38,6 +38,8 @@ $('ul#movies li').click(function() {
   else {
     $(this).data('selected', 'yes')
   }
+
+  filter_movies()
 })
 
 $('ul#movies li').hover(function() {

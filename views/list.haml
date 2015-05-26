@@ -1,7 +1,7 @@
 #movies_container
   %ul#movies
     - @movies.each do |movie|
-      %li.movie.shown{ data: { id: movie.id, title: movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1'), director: movie.directors.join(', '), genre: (movie.genres - @excluded_genres).join(', '), actor: movie.actors.take(10).join(', ').html_safe, year: movie.release_date.strftime('%Y'), overview: movie.overview, runtime: movie.runtime, selected: 'no' }, id: "movie_#{movie.id}" }
+      %li.movie.shown{ data: { id: movie.id, title: movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1'), director: movie.directors.join(', '), genre: (movie.genres - @excluded_genres).take(3).join(', '), actor: movie.actors.take(10).join(', ').html_safe, year: movie.release_date.strftime('%Y'), overview: movie.overview, runtime: movie.runtime, selected: 'no' }, id: "movie_#{movie.id}" }
         %img{ src: "#{@poster_path_base_url}w154#{movie.poster_path}" }
 
 #sidebar
