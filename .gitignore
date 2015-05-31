@@ -1,1 +1,2 @@
-secrets.rb
+.DS_Store
+secrets/development.rb

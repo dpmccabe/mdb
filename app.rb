@@ -7,7 +7,7 @@ require 'rest_client'
 require 'mongoid'
 require 'better_errors'
 require 'sinatra/reloader' if development?
-require_relative 'secrets'
+require_relative ['secrets', settings.environment].join('/')
 
 Mongoid.load!('mongoid.yml')
 
