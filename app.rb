@@ -97,6 +97,6 @@ get '/' do
 end
 
 error do
-  @error = 'Sorry there was an error - ' + env['sinatra.error'].name
+  @error = env['sinatra.error'].message
   halt haml(:index, format: :html5, layout: :layout)
 end
