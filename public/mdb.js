@@ -3,7 +3,7 @@ function escapeRegExp(str) {
 }
 
 adjust_spacing = function() {
-  line_width = document.body.clientWidth - 300
+  line_width = document.body.clientWidth - 600
   per_line = 0
   needed_width = 0
 
@@ -20,6 +20,9 @@ adjust_spacing = function() {
 
   $('ul#movies li').css('margin-right', margin + 'px')
   $('ul#movies li').css('margin-bottom', margin + 'px')
+
+  // new_width = 
+
   $('ul#movies').css('margin-top', margin + 'px')
   $('ul#movies').css('margin-left', margin + 'px')
 }
@@ -28,7 +31,7 @@ $(window).resize(function() {
   adjust_spacing()
 })
 
-//// List
+// List
 $('ul#movies li').click(function() {
   $(this).toggleClass('selected')
 
@@ -53,8 +56,8 @@ $('ul#movies li').hover(function() {
   $('#details').addClass('hidden')
 })
 
-//// Search
-fields = ['title', 'year', 'overview', 'director', 'actor', 'genre', 'selected']
+// Search
+fields = ['title', 'year', 'overview', 'director', 'actor', 'genre', 'runtime', 'selected']
 
 $('form').submit(function() {
   return(false)
@@ -67,11 +70,15 @@ filter_movies = function() {
     search_text = $('#search_' + field).val()
 
     if (search_text.length > 0) {
-      var search_regex = new RegExp("\\b" + escapeRegExp(search_text), 'i')
-
       $.each($('li.movie.shown'), function(j, movie) {
-        if (!$(movie).data(field).toString().match(search_regex))
-          $(movie).removeClass('shown')
+        if (field == "runtime") {
+          if (parseInt($(movie).data(field)) > parseInt(search_text))
+            $(movie).removeClass('shown')
+        } else {
+          var search_regex = new RegExp("\\b" + escapeRegExp(search_text), 'i')
+          if (!$(movie).data(field).toString().match(search_regex))
+            $(movie).removeClass('shown')
+        }
       })
     }
 
@@ -106,7 +113,7 @@ $('a.selected-filter').click(function(e) {
   }
 })
 
-//// Ready
+// Ready
 $(document).ready(function() {
   adjust_spacing()
 })

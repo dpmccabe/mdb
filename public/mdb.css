@@ -5,17 +5,17 @@ body {
   background: #ddd;
 }
 
-#sidebar {
+#details_container {
   position: fixed;
   background: #444;
-  left: 0;
+  right: 0;
   width: 300px;
   height: 100%;
-  box-shadow: rgba(0, 0, 0, 0.2) -4px 0px 4px inset;
+  box-shadow: rgba(0, 0, 0, 0.2) 4px 0px 4px inset;
   padding: 20px;
 }
 
-#sidebar::after {
+#details_container::after {
   content: "";
   background: url(/noise.png);
   opacity: 0.7;
@@ -27,26 +27,48 @@ body {
   z-index: -1;   
 }
 
-#sidebar label {
+#filters {
+  position: fixed;
+  background: #444;
+  left: 0;
+  width: 300px;
+  height: 100%;
+  box-shadow: rgba(0, 0, 0, 0.2) -4px 0px 4px inset;
+  padding: 20px;
+}
+
+.sidebar::after {
+  content: "";
+  background: url(/noise.png);
+  opacity: 0.7;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+#filters label {
   color: white;
 }
 
-#sidebar .input-group-addon {
+#filters .input-group-addon {
   padding: 0;
 }
 
-#sidebar .input-group-addon a {
+#filters .input-group-addon a {
   display: block;
   padding: 6px 12px;
   color: #c6c6c6;
   text-shadow: rgba(0, 0, 0, 0.35) -1px -1px 0;
 }
 
-#sidebar .input-group-addon a:hover {
+#filters .input-group-addon a:hover {
   color: #aaa;
 }
 
-#sidebar select.form-control + .input-group-addon {
+#filters select.form-control + .input-group-addon {
   background: none;
   border-color: transparent;
 }
@@ -56,33 +78,34 @@ body {
   border-color: #ccc;
 }
 
-#sidebar hr {
+.sidebar hr {
   border-top-color: #666;
 }
 
-#sidebar h4 {
+.sidebar h4 {
   color: white;
   margin-bottom: 0;
   font-weight: bold;
 }
 
-#sidebar h6 {
+.sidebar h6 {
   color: white;
   font-weight: bold;
   margin: 0 0 3px 0;
 }
 
-#sidebar h6#year {
+.sidebar h6#year {
   margin: 5px 0 15px 0;
 }
 
-#sidebar p {
+.sidebar p {
   color: #ddd;
   margin: 0 0 15px 0;
 }
 
 #movies_container {
   padding-left: 300px;
+  padding-right: 300px;
   width: 100%;
   position: absolute;
 }

@@ -4,7 +4,7 @@
       %li.movie.shown{ data: { id: movie.id, title: movie.title.gsub(/\A(.*), (The|A|An)\z/, '\2 \1'), director: movie.directors.join(', '), genre: (movie.genres - @excluded_genres).take(3).join(', '), actor: movie.actors.take(10).join(', ').html_safe, year: movie.release_date.strftime('%Y'), overview: movie.overview, runtime: movie.runtime, selected: 'no' }, id: "movie_#{movie.id}" }
         %img{ src: "#{@poster_path_base_url}w154#{movie.poster_path}" }
 
-#sidebar
+#filters.sidebar
   %form{ action: '#', id: 'search', method: 'POST' }
     .form-group
       %label{ for: 'search_title' } Title
@@ -57,6 +57,14 @@
             %span.glyphicon.glyphicon-remove
 
     .form-group
+      %label{ for: 'search_runtime' } Maximum runtime (in minutes)
+      .input-group
+        %input.form-control#search_runtime{ type: 'text' }
+        .input-group-addon
+          %a#clear_runtime{ href: '#' }
+            %span.glyphicon.glyphicon-remove
+
+    .form-group
       %label Selected?
       %input.form-control#search_selected{ type: 'hidden' }
       .btn-group.btn-group-justified{ role: 'group' }
@@ -64,9 +72,8 @@
         %a.selected-filter.btn.btn-default{ href: '#', role: 'button', data: { selected: 'yes' } } Yes
         %a.selected-filter.btn.btn-default{ href: '#', role: 'button', data: { selected: 'no' } } No
 
+#details_container.sidebar
   #details.hidden
-    %hr
-
     %h4#title
     %h6#year
     %p#overview
