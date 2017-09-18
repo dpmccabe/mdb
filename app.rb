@@ -60,6 +60,7 @@ get '/' do
 
     if movie_ids_to_save.any?
       movies_to_save_attributes = movie_ids_to_save.first(10).map do |movie_id|
+        puts movie_id
         tmdb_movie = tmdb_get("movie/#{movie_id}")
         credits = tmdb_get("movie/#{movie_id}/credits")
         actors = credits['cast']
