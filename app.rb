@@ -46,7 +46,7 @@ get '/' do
   if @list_id = params[:id]
     begin
       @list = tmdb_get("list/#{@list_id}")
-      list_movie_ids = @list['items'].map { |movie| movie['id'].to_i }
+      list_movie_ids = @list['items'].keep_if { |movie| movie['media_type'] == 'movie' }.map { |movie| movie['id'].to_i }
       @title = [@list['name'], 'TMDb List Viewer'].join(' - ')
     rescue RestClient::ResourceNotFound => e
       @error = 'Sorry, there was an error trying to access that list. Please confirm the list ID.'
@@ -60,7 +60,6 @@ get '/' do
 
     if movie_ids_to_save.any?
       movies_to_save_attributes = movie_ids_to_save.first(10).map do |movie_id|
-        puts movie_id
         tmdb_movie = tmdb_get("movie/#{movie_id}")
         credits = tmdb_get("movie/#{movie_id}/credits")
         actors = credits['cast']
