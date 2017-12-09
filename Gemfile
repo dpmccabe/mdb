@@ -1,11 +1,12 @@
 ruby '2.2.3'
 source 'https://rubygems.org'
 
+gem 'rack', '~> 1.6.2'
+gem 'rest-client', '~> 1.7.3'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'haml'
 gem 'json'
-gem 'rest-client'
 gem 'mongoid'
 gem 'better_errors'
 gem 'binding_of_caller'
